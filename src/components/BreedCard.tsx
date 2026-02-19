@@ -15,22 +15,23 @@ const sizeColors: Record<string, string> = {
 };
 
 export default function BreedCard({ breed }: BreedCardProps) {
-  const imgSrc = `https://placedog.net/600/400?id=${Math.abs(
-    breed.name.charCodeAt(0) * 3 + (breed.name.charCodeAt(1) || 5) * 7
-  )}`;
-
   return (
     <Link to={getBreedUrl(breed)} className="group block">
       <div className="card-soft h-full flex flex-col overflow-hidden rounded-2xl border border-border transition-all duration-300 hover:border-primary/50 hover:shadow-glow-primary hover:-translate-y-1">
         {/* Image */}
         <div className="relative h-48 overflow-hidden rounded-t-2xl bg-muted">
           <img
-            src={imgSrc}
+            src={breed.imageUrl}
             alt={breed.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = `https://placedog.net/600/400?random=${breed.name.charCodeAt(0)}`;
+              const target = e.target as HTMLImageElement;
+              if (!target.dataset.fallback) {
+                target.dataset.fallback = "1";
+                const hash = breed.name.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
+                target.src = `https://placedog.net/600/400?id=${(hash % 80) + 1}`;
+              }
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
