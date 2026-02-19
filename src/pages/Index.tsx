@@ -82,12 +82,12 @@ export default function Index() {
               </h1>
 
               <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
-                Dog Match pairs your personality and your environment — home size, energy, allergies,
-                schedule, budget — to breeds and adoptable dogs near you.
+                Dog Match pairs your personality and your environment: home size, energy, allergies,
+                schedule, and budget to breeds and adoptable dogs near you.
               </p>
 
               <p className="text-sm text-muted-foreground/70 italic">
-                "No perfect dog exists — but there is a best fit for your life."
+                "Perfect humans don't exist but perfect dogs do."
               </p>
 
               {/* CTAs */}
