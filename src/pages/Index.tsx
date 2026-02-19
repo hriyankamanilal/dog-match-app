@@ -1,4 +1,5 @@
 import heroDogsImg from "@/assets/hero-dogs.jpg";
+import meAndMaltImg from "@/assets/meandmalt.jpg";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Search, Sparkles, Dog, Home, Clock } from "lucide-react";
@@ -217,7 +218,7 @@ export default function Index() {
               <div className="relative">
                 <div className="aspect-square rounded-3xl bg-muted border border-border overflow-hidden max-w-sm mx-auto">
                   <img
-                    src="https://placedog.net/500/500?id=42"
+                    src={meAndMaltImg}
                     alt="Hriyanka and Malt"
                     className="w-full h-full object-cover"
                   />
@@ -240,18 +241,18 @@ export default function Index() {
                 <p className="text-muted-foreground leading-relaxed">
                   Hi, I'm <span className="text-foreground font-semibold">Hriyanka</span>. I'm the kind of person who will 
                   cross the street to say hi to a dog and accidentally ignore the human holding the leash. 
-                  My dog Malt changed my life — and I genuinely believe no house is a home without a 
+                  My dog Malt changed my life and I genuinely believe no house is a home without a 
                   four-legged furry shadow following you around.
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed">
-                  Dog Match is my attempt to make sure people choose dogs with their whole lifestyle in mind… 
+                  Dog Match is my attempt to make sure people choose dogs with their whole lifestyle in mind,
                   not just their camera roll.
                 </p>
 
                 <div className="card-soft rounded-2xl p-5 border-l-4 border-accent">
                   <p className="text-foreground text-sm italic leading-relaxed">
-                    "We're a guide, not a guarantee — every dog is an individual. But giving a dog the right 
+                    "We're a guide, not a guarantee. Every dog is an individual. But giving a dog the right 
                     home from day one? That's how you save two lives."
                   </p>
                 </div>
