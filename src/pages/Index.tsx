@@ -10,17 +10,17 @@ const pillars = [
   {
     icon: "🧠",
     title: "You",
-    desc: "Personality, lifestyle, energy, and what kind of dog owner you actually are (not who you wish you were).",
+    desc: "Your personality, lifestyle, energy, and the kind of dog owner you truly are. We meet you where you're at.",
   },
   {
     icon: "🏠",
     title: "Your Home",
-    desc: "Space, noise tolerance, landlord rules, yard access — your home is part of the match.",
+    desc: "Space, noise levels, yard access, and any landlord rules all shape the perfect match. Your home matters too.",
   },
   {
     icon: "⏰",
     title: "Your Reality",
-    desc: "Time, grooming budget, shedding tolerance, allergies — the stuff nobody thinks about until it's a problem.",
+    desc: "Time, grooming budget, shedding tolerance, and allergies. The real-life details that make a match last.",
   },
 ];
 
