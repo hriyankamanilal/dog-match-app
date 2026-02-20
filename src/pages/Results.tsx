@@ -85,12 +85,12 @@ const topImg = topMatch.imageUrl;
           <h3 className="font-heading font-bold text-xl text-foreground mb-4">Runners-up</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
             {runners.map((breed, i) => {
-const topImg = topMatch.imageUrl;
+
               return (
                 <Link key={breed.name} to={getBreedUrl(breed)} className="group">
                   <div className="card-soft rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all hover:-translate-y-1 flex gap-4 p-4 items-center">
                     <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-muted">
-                      <img src={img} alt={breed.name} className="w-full h-full object-cover" />
+                    <img src={breed.imageUrl} alt={breed.name} className="w-full h-full object-cover" />
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-0.5">#{i + 2} Runner-up</div>
