@@ -26,7 +26,7 @@ export default function Results() {
   const result = useMemo(() => calculateMatch(answers), [answers]);
   const { topMatch, runners } = result;
 
-  const topImg = `https://placedog.net/800/600?id=${Math.abs(topMatch.name.charCodeAt(0) * 3 + (topMatch.name.charCodeAt(1) || 5) * 7)}`;
+const topImg = topMatch.imageUrl;
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,7 +85,7 @@ export default function Results() {
           <h3 className="font-heading font-bold text-xl text-foreground mb-4">Runners-up</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
             {runners.map((breed, i) => {
-              const img = `https://placedog.net/600/400?id=${Math.abs(breed.name.charCodeAt(0) * 5 + (breed.name.charCodeAt(1) || 7) * 9)}`;
+const topImg = topMatch.imageUrl;
               return (
                 <Link key={breed.name} to={getBreedUrl(breed)} className="group">
                   <div className="card-soft rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all hover:-translate-y-1 flex gap-4 p-4 items-center">
