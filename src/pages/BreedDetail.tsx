@@ -102,8 +102,8 @@ function StatBar({ value, label }: { value: number; label: string }) {
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span ="text-sm px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground font-medium">
-      {children}
+<span className="text-sm px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground font-medium">
+  {children}
     </span>
   );
 }
