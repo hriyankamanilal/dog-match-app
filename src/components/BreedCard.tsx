@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Breed, getBreedUrl, energyLabel, sheddingLabel } from "@/data/breeds";
-import { Badge } from "@/components/ui/badge";
 import { Zap, Scissors, Ruler } from "lucide-react";
 
 interface BreedCardProps {
@@ -14,26 +14,121 @@ const sizeColors: Record<string, string> = {
   Giant: "bg-destructive/20 text-destructive-foreground border-destructive/30",
 };
 
+// Map breed names to Dog CEO API format
+function toDogCeoBreed(name: string): string | null {
+  const map: Record<string, string> = {
+    "Affenpinscher": "affenpinscher",
+    "Afghan Hound": "hound/afghan",
+    "Airedale Terrier": "terrier/airedale",
+    "Akita": "akita",
+    "Alaskan Malamute": "malamute",
+    "Australian Cattle Dog": "cattledog/australian",
+    "Australian Shepherd": "australian/shepherd",
+    "Australian Terrier": "terrier/australian",
+    "Basenji": "basenji",
+    "Basset Hound": "hound/basset",
+    "Beagle": "beagle",
+    "Belgian Malinois": "malinois",
+    "Bernese Mountain Dog": "mountain/bernese",
+    "Bichon Frise": "bichon",
+    "Bloodhound": "hound/blood",
+    "Border Collie": "collie/border",
+    "Border Terrier": "terrier/border",
+    "Boston Terrier": "terrier/boston",
+    "Boxer": "boxer",
+    "Bull Terrier": "terrier/bull",
+    "Cairn Terrier": "terrier/cairn",
+    "Cardigan Welsh Corgi": "corgi/cardigan",
+    "Cavalier King Charles Spaniel": "spaniel/cocker",
+    "Chihuahua": "chihuahua",
+    "Chow Chow": "chow",
+    "Cocker Spaniel": "spaniel/cocker",
+    "Collie": "collie/border",
+    "Dachshund": "dachshund",
+    "Dalmatian": "dalmatian",
+    "Doberman Pinscher": "doberman",
+    "English Springer Spaniel": "spaniel/springer",
+    "French Bulldog": "bulldog/french",
+    "German Shepherd Dog": "germanshepherd",
+    "German Shorthaired Pointer": "pointer/germanlonghair",
+    "Golden Retriever": "retriever/golden",
+    "Great Dane": "dane/great",
+    "Greyhound": "greyhound/italian",
+    "Havanese": "havanese",
+    "Irish Setter": "setter/irish",
+    "Irish Wolfhound": "wolfhound/irish",
+    "Italian Greyhound": "greyhound/italian",
+    "Labrador Retriever": "labrador",
+    "Maltese": "maltese",
+    "Mastiff": "mastiff",
+    "Miniature Pinscher": "pinscher/miniature",
+    "Miniature Schnauzer": "schnauzer/miniature",
+    "Newfoundland": "newfoundland",
+    "Papillon": "papillon",
+    "Pembroke Welsh Corgi": "corgi/cardigan",
+    "Pomeranian": "pomeranian",
+    "Poodle": "poodle/standard",
+    "Poodle (Miniature)": "poodle/miniature",
+    "Poodle (Standard)": "poodle/standard",
+    "Poodle (Toy)": "poodle/toy",
+    "Pug": "pug",
+    "Rhodesian Ridgeback": "ridgeback/rhodesian",
+    "Rottweiler": "rottweiler",
+    "Saint Bernard": "stbernard",
+    "Samoyed": "samoyed",
+    "Scottish Terrier": "terrier/scottish",
+    "Shetland Sheepdog": "sheepdog/shetland",
+    "Shiba Inu": "shiba",
+    "Shih Tzu": "shihtzu",
+    "Siberian Husky": "husky",
+    "Vizsla": "vizsla",
+    "Weimaraner": "weimaraner",
+    "West Highland White Terrier": "terrier/westhighland",
+    "Whippet": "whippet",
+    "Yorkshire Terrier": "terrier/yorkshire",
+  };
+  return map[name] || null;
+}
+
 export default function BreedCard({ breed }: BreedCardProps) {
+  const [imgSrc, setImgSrc] = useState<string>(breed.imageUrl);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const dogCeoBreed = toDogCeoBreed(breed.name);
+    if (!dogCeoBreed) {
+      setLoading(false);
+      return;
+    }
+    fetch(`https://dog.ceo/api/breed/${dogCeoBreed}/images/random`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === "success" && data.message) {
+          setImgSrc(data.message);
+        }
+      })
+      .catch(() => {}) // keep fallback imageUrl on error
+      .finally(() => setLoading(false));
+  }, [breed.name]);
+
   return (
     <Link to={getBreedUrl(breed)} className="group block">
       <div className="card-soft h-full flex flex-col overflow-hidden rounded-2xl border border-border transition-all duration-300 hover:border-primary/50 hover:shadow-glow-primary hover:-translate-y-1">
         {/* Image */}
         <div className="relative h-48 overflow-hidden rounded-t-2xl bg-muted">
-          <img
-            src={breed.imageUrl}
-            alt={breed.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              if (!target.dataset.fallback) {
-                target.dataset.fallback = "1";
-                const hash = breed.name.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
-                target.src = `https://placedog.net/600/400?id=${(hash % 80) + 1}`;
-              }
-            }}
-          />
+          {loading ? (
+            <div className="w-full h-full flex items-center justify-center bg-muted animate-pulse">
+              <span className="text-2xl">🐾</span>
+            </div>
+          ) : (
+            <img
+              src={imgSrc}
+              alt={breed.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              onError={() => setImgSrc(breed.imageUrl)}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
           <div className="absolute bottom-3 left-3">
             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${sizeColors[breed.sizeCategory]}`}>
@@ -55,8 +150,6 @@ export default function BreedCard({ breed }: BreedCardProps) {
             {breed.name}
           </h3>
           <p className="text-muted-foreground text-xs line-clamp-2">{breed.temperament}</p>
-
-          {/* Stats row */}
           <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t border-border">
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Zap className="w-3 h-3 text-accent" />
