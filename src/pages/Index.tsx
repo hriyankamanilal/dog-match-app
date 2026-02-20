@@ -1,10 +1,14 @@
-import heroDogsImg from "@/assets/hero-dogs.jpg";
-import meAndMaltImg from "@/assets/meandmalt.jpg";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Search, Sparkles, Dog, Home, Clock } from "lucide-react";
+import { ArrowRight, Heart, Search, Sparkles } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import heroDogsImg from "@/assets/hero-dogs.jpg";
+import maltGarden from "@/assets/malt-garden.jpg";
+import maltHappy from "@/assets/malt-happy.jpg";
+import maltCloseup from "@/assets/malt-closeup.jpg";
+import maltPool from "@/assets/malt-pool.jpg";
 
 const pillars = [
   {
@@ -55,20 +59,27 @@ const ctaCards = [
   },
 ];
 
+const maltPhotos = [
+  { src: maltGarden, alt: "Malt sitting in the garden" },
+  { src: maltHappy, alt: "Malt happy and smiling" },
+  { src: maltCloseup, alt: "Malt close up" },
+  { src: maltPool, alt: "Malt by the pool" },
+];
+
 export default function Index() {
+  const [maltPhoto, setMaltPhoto] = useState(0);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
-        {/* Background glow */}
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-32 right-1/4 w-64 h-64 bg-accent/8 rounded-full blur-3xl pointer-events-none" />
 
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Copy */}
             <div className="space-y-6 animate-fade-up">
               <div className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent">
                 <Sparkles className="w-3.5 h-3.5" />
@@ -90,7 +101,6 @@ export default function Index() {
                 "Perfect humans don't exist but perfect dogs do."
               </p>
 
-              {/* CTAs */}
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link to="/quiz">
                   <Button
@@ -124,7 +134,6 @@ export default function Index() {
               </div>
             </div>
 
-            {/* Right: Hero Image */}
             <div className="relative flex justify-center lg:justify-end animate-fade-in">
               <div className="relative w-full max-w-lg">
                 <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-2xl scale-95" />
@@ -133,11 +142,10 @@ export default function Index() {
                   alt="A golden retriever in a cozy apartment"
                   className="relative w-full rounded-3xl border border-border shadow-card animate-float"
                 />
-                {/* Floating badge */}
                 <div className="absolute -bottom-4 -left-4 bg-card border border-border rounded-2xl px-4 py-3 shadow-card flex items-center gap-2">
                   <span className="text-2xl">🐾</span>
                   <div>
-                    <p className="font-heading font-bold text-sm text-foreground">100+ Breeds</p>
+                    <p className="font-heading font-bold text-sm text-foreground">130+ Breeds</p>
                     <p className="text-xs text-muted-foreground">Data-driven matching</p>
                   </div>
                 </div>
@@ -151,7 +159,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* How We Match Strip */}
+      {/* How We Match */}
       <section className="py-16 border-y border-border bg-card/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
@@ -209,23 +217,41 @@ export default function Index() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* Meet Malt */}
       <section id="about" className="py-20 border-t border-border bg-card/30">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              {/* Photo placeholder */}
-              <div className="relative">
-                <div className="aspect-square rounded-3xl bg-muted border border-border overflow-hidden max-w-sm mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-2">The origin story</p>
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground">
+                Meet Malt 🐾
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Photo gallery */}
+              <div className="space-y-3">
+                <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-muted border border-border">
                   <img
-                    src={meAndMaltImg}
-                    alt="Hriyanka and Malt"
-                    className="w-full h-full object-cover"
+                    src={maltPhotos[maltPhoto].src}
+                    alt={maltPhotos[maltPhoto].alt}
+                    className="w-full h-full object-cover transition-all duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 text-center">
-                    <p className="font-heading font-bold text-foreground text-sm">Hriyanka & Malt 🐾</p>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                </div>
+                {/* Thumbnail strip */}
+                <div className="flex gap-2">
+                  {maltPhotos.map((photo, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setMaltPhoto(i)}
+                      className={`flex-1 rounded-xl overflow-hidden aspect-square border-2 transition-all ${
+                        i === maltPhoto ? "border-accent" : "border-transparent opacity-60 hover:opacity-100"
+                      }`}
+                    >
+                      <img src={photo.src} alt={photo.alt} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -233,28 +259,24 @@ export default function Index() {
               <div className="space-y-5">
                 <div>
                   <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-2">About Dog Match</p>
-                  <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground">
+                  <h3 className="font-heading font-bold text-2xl md:text-3xl text-foreground">
                     Built by a dog person, for dog people.
-                  </h2>
+                  </h3>
                 </div>
 
                 <p className="text-muted-foreground leading-relaxed">
-                  Hi, I'm <span className="text-foreground font-semibold">Hriyanka</span>. I'm the kind of person who will 
-                  cross the street to say hi to a dog and accidentally ignore the human holding the leash. 
-                  My dog Malt changed my life and I genuinely believe no house is a home without a 
-                  four-legged furry shadow following you around.
+                  Hi, I'm <span className="text-foreground font-semibold">Hriyanka</span>. Malt came into my life four years ago from a family friend's litter. I chose him because he seemed shy and gentlemanly, the kind of dog who would quietly be my best friend forever. One out of three wasn't bad.
                 </p>
 
                 <p className="text-muted-foreground leading-relaxed">
-                  Dog Match is my attempt to make sure people choose dogs with their whole lifestyle in mind,
-                  not just their camera roll.
+                  He is and always will be my closest companion, adventure buddy, and daily therapist. Even miles away in New York, I still glance down at the floor of my apartment expecting to find him there.
                 </p>
 
                 <div className="card-soft rounded-2xl p-5 border-l-4 border-accent">
                   <p className="text-foreground text-sm italic leading-relaxed">
-                    "We're a guide, not a guarantee. Every dog is an individual. But giving a dog the right 
-                    home from day one? That's how you save two lives."
+                    "This app is my small way of honoring what he gave me. I hope you find your Malt. There is genuinely nothing else like it."
                   </p>
+                  <p className="text-accent text-xs font-semibold mt-2">— Hriyanka, founder</p>
                 </div>
 
                 <Link to="/quiz">
