@@ -271,91 +271,6 @@ Wirehaired Pointing Griffon,Friendly Devoted Trainable,65,55.88,60.96,20.41,31.7
 Xoloitzcuintli,Loyal Alert Calm,69,25.4,57.15,3.63,20.41,13,18,Non-Sporting Group,0.2,Occasional Bath/Brush,0.0,Infrequent,0.4,Calm,0.8,Easy Training,0.4,Reserved with Strangers
 Yorkshire Terrier,Feisty Tomboyish Affectionate,12,17.78,20.32,1.36,3.17,11,15,Toy Group,0.8,Daily Brushing,0.0,Infrequent,0.6,Regular Exercise,0.8,Easy Training,0.8,Friendly`;
 
-function parseCSV(): Breed[] {
-  const lines = RAW_CSV.trim().split("\n");
-  return lines.map((line) => {
-    // Use a simple split approach
-    const parts = line.split(",");
-    const name = parts[0];
-    const temperament = parts[1];
-const hasPopularity = parts[2] && parseNumber(parts[2]) === Math.floor(parseNumber(parts[2])) && parseNumber(parts[2]) > 10;
-const offset = hasPopularity ? 0 : -1;
-const popularity = hasPopularity ? parseNumber(parts[2]) : null;
-const minHeight = parseNumber(parts[3 + offset]);
-const maxHeight = parseNumber(parts[4 + offset]);
-const minWeight = parseNumber(parts[5 + offset]);
-const maxWeight = parseNumber(parts[6 + offset]);
-const minExpectancy = parseNumber(parts[7 + offset]);
-const maxExpectancy = parseNumber(parts[8 + offset]);
-const group = parts[9 + offset] || "Mixed";
-const groomingFrequencyValue = parseNumber(parts[10 + offset]);
-const groomingFrequencyCategory = parts[11 + offset] || "";
-const sheddingValue = parseNumber(parts[12 + offset]);
-const sheddingCategory = parts[13 + offset] || "";
-const energyLevelValue = parseNumber(parts[14 + offset]);
-const energyLevelCategory = parts[15 + offset] || "";
-const trainabilityValue = parseNumber(parts[16 + offset]);
-const trainabilityCategory = parts[17 + offset] || "";
-const demeanorValue = parseNumber(parts[18 + offset]);
-const demeanorCategory = parts[19 + offset] || "";
-    const minHeight = parseNumber(parts[3]);
-    const maxHeight = parseNumber(parts[4]);
-    const minWeight = parseNumber(parts[5]);
-    const maxWeight = parseNumber(parts[6]);
-    const minExpectancy = parseNumber(parts[7]);
-    const maxExpectancy = parseNumber(parts[8]);
-    const group = parts[9] || "Mixed";
-    const groomingFrequencyValue = parseNumber(parts[10]);
-    const groomingFrequencyCategory = parts[11] || "";
-    const sheddingValue = parseNumber(parts[12]);
-    const sheddingCategory = parts[13] || "";
-    const energyLevelValue = parseNumber(parts[14]);
-    const energyLevelCategory = parts[15] || "";
-    const trainabilityValue = parseNumber(parts[16]);
-    const trainabilityCategory = parts[17] || "";
-    const demeanorValue = parseNumber(parts[18]);
-    const demeanorCategory = parts[19] || "";
-
-    const avgWeight = (minWeight + maxWeight) / 2;
-    const avgHeight = (minHeight + maxHeight) / 2;
-    const sizeCategory = getSizeCategory(avgHeight, avgWeight);
-
-    const isAllergyFriendly = sheddingValue <= 0.2;
-    const isApartmentFriendly = energyLevelValue <= 0.6 && avgHeight < 50;
-    const isGoodWithKids = demeanorValue >= 0.8 || demeanorCategory === "Outgoing" || demeanorCategory === "Friendly";
-    const isGoodWithPets = demeanorCategory === "Outgoing" || demeanorCategory === "Friendly";
-
-    return {
-      name,
-      description: "",
-      temperament,
-      popularity,
-      minHeight,
-      maxHeight,
-      minWeight,
-      maxWeight,
-      minExpectancy,
-      maxExpectancy,
-      group,
-      groomingFrequencyValue,
-      groomingFrequencyCategory,
-      sheddingValue,
-      sheddingCategory,
-      energyLevelValue,
-      energyLevelCategory,
-      trainabilityValue,
-      trainabilityCategory,
-      demeanorValue,
-      demeanorCategory,
-      sizeCategory,
-      isAllergyFriendly,
-      isApartmentFriendly,
-      isGoodWithKids,
-      isGoodWithPets,
-      imageUrl: getBreedImage(name),
-    };
-  });
-}
 
 export const breeds: Breed[] = parseCSV();
 
@@ -405,4 +320,71 @@ export function groomingLabel(val: number): string {
   if (val >= 0.6) return "Moderate-High";
   if (val >= 0.4) return "Moderate";
   return "Low";
+}
+function parseCSV(): Breed[] {
+  const lines = RAW_CSV.trim().split("\n");
+  return lines.map((line) => {
+    const parts = line.split(",");
+    const name = parts[0];
+    const temperament = parts[1];
+    const hasPopularity = parts[2] && parseNumber(parts[2]) === Math.floor(parseNumber(parts[2])) && parseNumber(parts[2]) > 10;
+    const offset = hasPopularity ? 0 : -1;
+    const popularity = hasPopularity ? parseNumber(parts[2]) : null;
+    const minHeight = parseNumber(parts[3 + offset]);
+    const maxHeight = parseNumber(parts[4 + offset]);
+    const minWeight = parseNumber(parts[5 + offset]);
+    const maxWeight = parseNumber(parts[6 + offset]);
+    const minExpectancy = parseNumber(parts[7 + offset]);
+    const maxExpectancy = parseNumber(parts[8 + offset]);
+    const group = parts[9 + offset] || "Mixed";
+    const groomingFrequencyValue = parseNumber(parts[10 + offset]);
+    const groomingFrequencyCategory = parts[11 + offset] || "";
+    const sheddingValue = parseNumber(parts[12 + offset]);
+    const sheddingCategory = parts[13 + offset] || "";
+    const energyLevelValue = parseNumber(parts[14 + offset]);
+    const energyLevelCategory = parts[15 + offset] || "";
+    const trainabilityValue = parseNumber(parts[16 + offset]);
+    const trainabilityCategory = parts[17 + offset] || "";
+    const demeanorValue = parseNumber(parts[18 + offset]);
+    const demeanorCategory = parts[19 + offset] || "";
+
+    const avgWeight = (minWeight + maxWeight) / 2;
+    const avgHeight = (minHeight + maxHeight) / 2;
+    const sizeCategory = getSizeCategory(avgHeight, avgWeight);
+
+    const isAllergyFriendly = sheddingValue <= 0.2;
+    const isApartmentFriendly = energyLevelValue <= 0.6 && avgHeight < 50;
+    const isGoodWithKids = demeanorValue >= 0.8 || demeanorCategory === "Outgoing" || demeanorCategory === "Friendly";
+    const isGoodWithPets = demeanorCategory === "Outgoing" || demeanorCategory === "Friendly";
+
+    return {
+      name,
+      description: "",
+      temperament,
+      popularity,
+      minHeight,
+      maxHeight,
+      minWeight,
+      maxWeight,
+      minExpectancy,
+      maxExpectancy,
+      group,
+      groomingFrequencyValue,
+      groomingFrequencyCategory,
+      sheddingValue,
+      sheddingCategory,
+      energyLevelValue,
+      energyLevelCategory,
+      trainabilityValue,
+      trainabilityCategory,
+      demeanorValue,
+      demeanorCategory,
+      sizeCategory,
+      isAllergyFriendly,
+      isApartmentFriendly,
+      isGoodWithKids,
+      isGoodWithPets,
+      imageUrl: getBreedImage(name),
+    };
+  });
 }
