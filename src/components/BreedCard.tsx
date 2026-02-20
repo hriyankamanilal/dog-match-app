@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Breed, getBreedUrl, energyLabel, sheddingLabel } from "@/data/breeds";
-import { Zap, Scissors, Ruler } from "lucide-react";
+import { Zap, Scissors, Ruler, PawPrint } from "lucide-react";
+import { useFavorites } from "@/context/FavoritesContext";
 
 interface BreedCardProps {
   breed: Breed;
@@ -14,7 +15,6 @@ const sizeColors: Record<string, string> = {
   Giant: "bg-destructive/20 text-destructive-foreground border-destructive/30",
 };
 
-// Map breed names to Dog CEO API format
 function toDogCeoBreed(name: string): string | null {
   const map: Record<string, string> = {
     "Affenpinscher": "affenpinscher",
@@ -93,6 +93,8 @@ function toDogCeoBreed(name: string): string | null {
 export default function BreedCard({ breed }: BreedCardProps) {
   const [imgSrc, setImgSrc] = useState<string>(breed.imageUrl);
   const [loading, setLoading] = useState(true);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const favorited = isFavorite(breed.name);
 
   useEffect(() => {
     const dogCeoBreed = toDogCeoBreed(breed.name);
@@ -107,14 +109,13 @@ export default function BreedCard({ breed }: BreedCardProps) {
           setImgSrc(data.message);
         }
       })
-      .catch(() => {}) // keep fallback imageUrl on error
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [breed.name]);
 
   return (
     <Link to={getBreedUrl(breed)} className="group block">
       <div className="card-soft h-full flex flex-col overflow-hidden rounded-2xl border border-border transition-all duration-300 hover:border-primary/50 hover:shadow-glow-primary hover:-translate-y-1">
-        {/* Image */}
         <div className="relative h-48 overflow-hidden rounded-t-2xl bg-muted">
           {loading ? (
             <div className="w-full h-full flex items-center justify-center bg-muted animate-pulse">
@@ -130,6 +131,24 @@ export default function BreedCard({ breed }: BreedCardProps) {
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+
+          {/* Paw favorite button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleFavorite(breed.name);
+            }}
+            className={`absolute top-3 left-3 p-2 rounded-full transition-all duration-200 ${
+              favorited
+                ? "bg-accent text-accent-foreground scale-110"
+                : "bg-background/70 text-muted-foreground hover:bg-accent/20 hover:text-accent"
+            }`}
+            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+          >
+            <PawPrint className="w-4 h-4" fill={favorited ? "currentColor" : "none"} />
+          </button>
+
           <div className="absolute bottom-3 left-3">
             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${sizeColors[breed.sizeCategory]}`}>
               {breed.sizeCategory}
@@ -144,7 +163,6 @@ export default function BreedCard({ breed }: BreedCardProps) {
           )}
         </div>
 
-        {/* Content */}
         <div className="p-4 flex flex-col gap-2 flex-1">
           <h3 className="font-heading font-bold text-foreground text-lg leading-tight group-hover:text-primary transition-colors">
             {breed.name}
