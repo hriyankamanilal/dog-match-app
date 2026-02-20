@@ -102,7 +102,7 @@ function StatBar({ value, label }: { value: number; label: string }) {
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-sm px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground font-medium">
+    <span ="text-sm px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground font-medium">
       {children}
     </span>
   );
@@ -290,7 +290,7 @@ export default function BreedDetail() {
                     <div className="text-4xl animate-pulse">🐾</div>
                   </div>
                 ) : (
-                  <img src={currentPhoto} alt={breed.name} className="w-full h-full object-cover" />
+                  <img src={currentPhoto} alt={breed.name} className="w-full h-full object-contain bg-muted" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
                 {photos.length > 1 && (
@@ -328,7 +328,7 @@ export default function BreedDetail() {
                       onClick={() => setPhotoIndex(i)}
                       className={`flex-1 rounded-xl overflow-hidden aspect-square border-2 transition-all ${i === photoIndex ? "border-accent" : "border-transparent opacity-60 hover:opacity-100"}`}
                     >
-                      <img src={p} alt={`${breed.name} ${i + 1}`} className="w-full h-full object-cover" />
+                      <img src={p} alt={`${breed.name} ${i + 1}`} className="w-full h-full object-contain bg-muted" />
                     </button>
                   ))}
                 </div>
