@@ -130,7 +130,7 @@ Afghan Hound,Dignified Profoundly Loyal Aristocratic,113,63.5,68.58,22.68,27.22,
 Airedale Terrier,Friendly Clever Courageous,60,58.42,58.42,22.68,31.75,11,14,Terrier Group,0.6,2-3 Times a Week Brushing,0.4,Occasional,0.6,Regular Exercise,1.0,Eager to Please,0.8,Friendly
 Akita,Courageous Dignified Profoundly Loyal,47,60.96,71.12,31.75,58.97,10,13,Working Group,0.8,Daily Brushing,0.6,Seasonal,0.8,Energetic,1.0,Eager to Please,0.6,Alert/Responsive
 Alaskan Malamute,Affectionate Loyal Playful,58,58.42,63.5,34.02,38.56,10,14,Working Group,0.6,2-3 Times a Week Brushing,0.6,Seasonal,0.8,Energetic,0.4,Independent,0.8,Friendly
-American Bulldog,Loyal Self-Confident,,50.8,63.5,27.22,45.36,10,12,Foundation Stock Service,0.2,Occasional Bath/Brush,0.6,Seasonal,0.8,Energetic,0.6,Agreeable,0.6,Alert/Responsive
+American Bulldog,Loyal Self-Confident,50.8,63.5,27.22,45.36,10,12,Foundation Stock Service,0.2,Occasional Bath/Brush,0.6,Seasonal,0.8,Energetic,0.6,Agreeable,0.6,Alert/Responsive
 American English Coonhound,Sweet Mellow Sociable,175,58.42,66.04,20.41,29.48,11,12,Hound Group,0.2,Occasional Bath/Brush,0.4,Occasional,0.8,Energetic,0.6,Agreeable,0.6,Alert/Responsive
 American Eskimo Dog,Playful Perky Smart,122,22.86,48.26,2.72,15.88,13,15,Non-Sporting Group,0.4,Weekly Brushing,0.6,Seasonal,0.8,Energetic,1.0,Eager to Please,1.0,Outgoing
 American Foxhound,Independent Easy-Going Sweet-Tempered,186,53.34,63.5,27.22,31.75,11,13,Hound Group,0.2,Occasional Bath/Brush,0.6,Seasonal,0.8,Energetic,0.4,Independent,0.8,Friendly
