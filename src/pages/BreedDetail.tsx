@@ -56,9 +56,7 @@ export default function BreedDetail() {
   const minWeightLbs = (breed.minWeight * 2.205).toFixed(0);
   const maxWeightLbs = (breed.maxWeight * 2.205).toFixed(0);
 
-  const imgSrc = `https://placedog.net/800/500?id=${Math.abs(
-    breed.name.charCodeAt(0) * 3 + (breed.name.charCodeAt(1) || 5) * 7
-  )}`;
+  const imgSrc = breed.imageUrl;
 
   // Build "Best for" and "Not ideal if" from traits
   const bestFor: string[] = [];
