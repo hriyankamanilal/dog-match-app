@@ -333,7 +333,7 @@ function parseCSV(): Breed[] {
       isApartmentFriendly,
       isGoodWithKids,
       isGoodWithPets,
-      imageUrl: `https://placedog.net/600/400?id=${Math.abs(name.charCodeAt(0) * 3 + (name.charCodeAt(1) || 5) * 7)}`,
+      imageUrl: getBreedImage(name),
     };
   });
 }
