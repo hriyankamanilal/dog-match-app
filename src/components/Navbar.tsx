@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useQuizTaken } from "@/hooks/useQuizTaken";
 
 const navLinks = [
   { label: "Browse Breeds", href: "/breeds" },
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { favorites } = useFavorites();
+  const quizTaken = useQuizTaken();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
@@ -44,7 +46,6 @@ export default function Navbar() {
 
         {/* Desktop CTA + Favorites */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Favorites icon */}
           <Link to="/favorites" className="relative p-2 rounded-full hover:bg-accent/10 transition-colors group">
             <PawPrint className={`w-5 h-5 transition-colors ${location.pathname === "/favorites" ? "text-accent" : "text-muted-foreground group-hover:text-accent"}`} />
             {favorites.length > 0 && (
@@ -55,7 +56,7 @@ export default function Navbar() {
           </Link>
           <Link to="/quiz">
             <Button className="rounded-pill bg-accent text-accent-foreground hover:bg-accent/90 font-heading font-semibold px-5 shadow-glow-accent">
-              Take the Quiz
+              {quizTaken ? "Retake Quiz" : "Take the Quiz"}
             </Button>
           </Link>
         </div>
@@ -106,7 +107,7 @@ export default function Navbar() {
           </Link>
           <Link to="/quiz" onClick={() => setOpen(false)}>
             <Button className="w-full rounded-pill bg-accent text-accent-foreground font-heading font-semibold mt-2">
-              Take the Quiz
+              {quizTaken ? "Retake Quiz" : "Take the Quiz"}
             </Button>
           </Link>
         </div>
