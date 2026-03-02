@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Search, Sparkles } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useQuizTaken } from "@/hooks/useQuizTaken";
 import heroDogsImg from "@/assets/hero-dogs.jpg";
 import maltGarden from "@/assets/malt-garden.jpg";
 import maltHappy from "@/assets/malt-happy.jpg";
@@ -28,37 +29,6 @@ const pillars = [
   },
 ];
 
-const ctaCards = [
-  {
-    icon: "🔍",
-    title: "Browse Dog Breeds",
-    desc: "Explore breeds by size, temperament, shedding, and energy. 100+ breeds with real data.",
-    button: "Explore Breeds",
-    href: "/breeds",
-    color: "border-primary/40 hover:border-primary",
-    buttonClass: "bg-primary text-primary-foreground hover:bg-primary/90",
-  },
-  {
-    icon: "✨",
-    title: "Take the Quiz",
-    desc: "10 questions. A match you can actually live with. We do the science; you do the loving.",
-    button: "Start the Quiz",
-    href: "/quiz",
-    color: "border-accent/60 hover:border-accent",
-    buttonClass: "bg-accent text-accent-foreground hover:bg-accent/90",
-    featured: true,
-  },
-  {
-    icon: "❤️",
-    title: "Adopt Don't Shop",
-    desc: "Find real dogs from rescues and shelters near you. They're waiting right now.",
-    button: "See Adoptable Dogs",
-    href: "/adopt",
-    color: "border-secondary/40 hover:border-secondary",
-    buttonClass: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
-  },
-];
-
 const maltPhotos = [
   { src: maltGarden, alt: "Malt sitting in the garden" },
   { src: maltHappy, alt: "Malt happy and smiling" },
@@ -68,6 +38,38 @@ const maltPhotos = [
 
 export default function Index() {
   const [maltPhoto, setMaltPhoto] = useState(0);
+  const quizTaken = useQuizTaken();
+
+  const ctaCards = [
+    {
+      icon: "🔍",
+      title: "Browse Dog Breeds",
+      desc: "Explore breeds by size, temperament, shedding, and energy. 100+ breeds with real data.",
+      button: "Explore Breeds",
+      href: "/breeds",
+      color: "border-primary/40 hover:border-primary",
+      buttonClass: "bg-primary text-primary-foreground hover:bg-primary/90",
+    },
+    {
+      icon: "✨",
+      title: quizTaken ? "Retake the Quiz" : "Take the Quiz",
+      desc: "10 questions. A match you can actually live with. We do the science; you do the loving.",
+      button: quizTaken ? "Retake the Quiz" : "Start the Quiz",
+      href: "/quiz",
+      color: "border-accent/60 hover:border-accent",
+      buttonClass: "bg-accent text-accent-foreground hover:bg-accent/90",
+      featured: true,
+    },
+    {
+      icon: "❤️",
+      title: "Adopt Don't Shop",
+      desc: "Find real dogs from rescues and shelters near you. They're waiting right now.",
+      button: "See Adoptable Dogs",
+      href: "/adopt",
+      color: "border-secondary/40 hover:border-secondary",
+      buttonClass: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,7 +94,7 @@ export default function Index() {
                 your life.
               </h1>
 
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
+              <p className="text-lg text-muted-foreground leading-relaxed max-lg">
                 Dog Match pairs your personality and your environment: home size, energy, allergies,
                 schedule, and budget to breeds and adoptable dogs near you.
               </p>
@@ -107,7 +109,7 @@ export default function Index() {
                     size="lg"
                     className="rounded-pill bg-accent text-accent-foreground hover:bg-accent/90 font-heading font-bold text-base px-8 shadow-glow-accent gap-2 animate-pulse-glow"
                   >
-                    Take the Quiz
+                    {quizTaken ? "Retake the Quiz" : "Take the Quiz"}
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
@@ -239,7 +241,6 @@ export default function Index() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
-                {/* Thumbnail strip */}
                 <div className="flex gap-2">
                   {maltPhotos.map((photo, i) => (
                     <button
@@ -281,7 +282,7 @@ export default function Index() {
 
                 <Link to="/quiz">
                   <Button className="rounded-pill bg-accent text-accent-foreground hover:bg-accent/90 font-heading font-semibold gap-2">
-                    Find My Match
+                    {quizTaken ? "Retake the Quiz" : "Find My Match"}
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
