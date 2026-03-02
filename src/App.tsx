@@ -12,6 +12,7 @@ import Results from "./pages/Results";
 import Adopt from "./pages/Adopt";
 import Favorites from "./pages/Favorites";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <FavoritesProvider>
           <Routes>
             <Route path="/" element={<Index />} />
