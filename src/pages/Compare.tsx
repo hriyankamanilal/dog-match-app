@@ -2,8 +2,9 @@ import { useMemo, useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { ArrowLeft, Star, Trophy, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getBreedById, energyLabel, sheddingLabel, groomingLabel, getBreedUrl } from "@/data/breeds";
+import { getBreedById, getBreedUrl } from "@/data/breeds";
 import { calculateMatch, QuizAnswers } from "@/data/quiz-logic";
+import { useQuizTaken } from "@/hooks/useQuizTaken";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -108,36 +109,23 @@ function StatRow({ label, val1, val2, higherIsBetter = true }: {
 
   return (
     <div className="grid grid-cols-[1fr_120px_1fr] gap-3 items-center py-3 border-b border-border last:border-0">
-      {/* Breed 1 bar */}
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{pct1}%</span>
           {breed1Wins && <Trophy className="w-3 h-3 text-accent" />}
         </div>
         <div className="h-2 rounded-full bg-muted overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${breed1Wins ? "bg-accent" : "bg-primary/50"}`}
-            style={{ width: `${pct1}%` }}
-          />
+          <div className={`h-full rounded-full transition-all duration-700 ${breed1Wins ? "bg-accent" : "bg-primary/50"}`} style={{ width: `${pct1}%` }} />
         </div>
       </div>
-
-      {/* Label */}
-      <div className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-        {label}
-      </div>
-
-      {/* Breed 2 bar (reversed) */}
+      <div className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wide">{label}</div>
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground flex-row-reverse">
           <span>{pct2}%</span>
           {breed2Wins && <Trophy className="w-3 h-3 text-accent" />}
         </div>
         <div className="h-2 rounded-full bg-muted overflow-hidden flex justify-end">
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${breed2Wins ? "bg-accent" : "bg-primary/50"}`}
-            style={{ width: `${pct2}%` }}
-          />
+          <div className={`h-full rounded-full transition-all duration-700 ${breed2Wins ? "bg-accent" : "bg-primary/50"}`} style={{ width: `${pct2}%` }} />
         </div>
       </div>
     </div>
@@ -150,15 +138,13 @@ function BoolRow({ label, val1, val2 }: { label: string; val1: boolean; val2: bo
       <div className="flex justify-start">
         {val1
           ? <span className="flex items-center gap-1 text-sm text-green-600 font-medium"><Check className="w-4 h-4" /> Yes</span>
-          : <span className="flex items-center gap-1 text-sm text-muted-foreground"><X className="w-4 h-4" /> No</span>
-        }
+          : <span className="flex items-center gap-1 text-sm text-muted-foreground"><X className="w-4 h-4" /> No</span>}
       </div>
       <div className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wide">{label}</div>
       <div className="flex justify-end">
         {val2
           ? <span className="flex items-center gap-1 text-sm text-green-600 font-medium"><Check className="w-4 h-4" /> Yes</span>
-          : <span className="flex items-center gap-1 text-sm text-muted-foreground"><X className="w-4 h-4" /> No</span>
-        }
+          : <span className="flex items-center gap-1 text-sm text-muted-foreground"><X className="w-4 h-4" /> No</span>}
       </div>
     </div>
   );
@@ -166,6 +152,7 @@ function BoolRow({ label, val1, val2 }: { label: string; val1: boolean; val2: bo
 
 export default function Compare() {
   const [params] = useSearchParams();
+  const quizTaken = useQuizTaken();
   const breed1Name = params.get("breed1") || "";
   const breed2Name = params.get("breed2") || "";
 
@@ -175,17 +162,15 @@ export default function Compare() {
   const photo1 = useBreedPhoto(breed1?.name || "", breed1?.imageUrl || "");
   const photo2 = useBreedPhoto(breed2?.name || "", breed2?.imageUrl || "");
 
-  // Check if user has quiz answers in sessionStorage
   const quizAnswers = useMemo<QuizAnswers | null>(() => {
     try {
-const stored = localStorage.getItem("dogmatch-quiz-answers");
+      const stored = localStorage.getItem("dogmatch-quiz-answers");
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
     }
   }, []);
 
-  // Calculate scores for both breeds if quiz was taken
   const scores = useMemo(() => {
     if (!quizAnswers || !breed1 || !breed2) return null;
     const result = calculateMatch(quizAnswers);
@@ -210,7 +195,6 @@ const stored = localStorage.getItem("dogmatch-quiz-answers");
   }
 
   const winner = scores ? (scores.score1 > scores.score2 ? breed1 : scores.score2 > scores.score1 ? breed2 : null) : null;
-
   const minWeightLbs1 = (breed1.minWeight * 2.205).toFixed(0);
   const maxWeightLbs1 = (breed1.maxWeight * 2.205).toFixed(0);
   const minWeightLbs2 = (breed2.minWeight * 2.205).toFixed(0);
@@ -220,7 +204,6 @@ const stored = localStorage.getItem("dogmatch-quiz-answers");
     <div className="min-h-screen bg-background pb-20">
       <Navbar />
       <div className="pt-20">
-        {/* Header */}
         <div className="border-b border-border bg-card/40 py-8">
           <div className="container mx-auto px-4">
             <Link to="/breeds" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm transition-colors mb-4">
@@ -244,7 +227,7 @@ const stored = localStorage.getItem("dogmatch-quiz-answers");
                 {winner.name} is the better match for you
               </h2>
               <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                Your lifestyle, home, and vibe align more closely with a {winner.name}. 
+                Your lifestyle, home, and vibe align more closely with a {winner.name}.
                 Match score: <span className="text-foreground font-semibold">{winner.name === breed1.name ? scores.score1 : scores.score2}</span> vs <span className="text-foreground font-semibold">{winner.name === breed1.name ? scores.score2 : scores.score1}</span>.
               </p>
               <Link to={getBreedUrl(winner)} className="inline-block mt-4">
@@ -347,7 +330,7 @@ const stored = localStorage.getItem("dogmatch-quiz-answers");
           <div className="text-center">
             <Link to="/quiz">
               <Button className="rounded-pill bg-accent text-accent-foreground font-heading font-semibold gap-2 px-8">
-                <Star className="w-4 h-4" /> Get My Personalised Match
+                <Star className="w-4 h-4" /> {quizTaken ? "Retake the Quiz" : "Get My Personalised Match"}
               </Button>
             </Link>
           </div>
