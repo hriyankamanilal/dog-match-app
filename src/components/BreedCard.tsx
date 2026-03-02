@@ -132,7 +132,7 @@ export default function BreedCard({ breed }: BreedCardProps) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
 
-          {/* Paw favorite button */}
+          {/* Paw favorite button — fixed color states */}
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -141,12 +141,16 @@ export default function BreedCard({ breed }: BreedCardProps) {
             }}
             className={`absolute top-3 left-3 p-2 rounded-full transition-all duration-200 ${
               favorited
-                ? "bg-accent text-accent-foreground scale-110"
-                : "bg-background/70 text-muted-foreground hover:bg-accent/20 hover:text-accent"
+                ? "bg-accent text-foreground scale-110 shadow-glow-accent"
+                : "bg-white/80 text-muted-foreground hover:bg-accent/20 hover:text-accent"
             }`}
             aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
           >
-            <PawPrint className="w-4 h-4" fill={favorited ? "currentColor" : "none"} />
+            <PawPrint
+              className="w-4 h-4"
+              fill={favorited ? "currentColor" : "none"}
+              strokeWidth={favorited ? 0 : 2}
+            />
           </button>
 
           <div className="absolute bottom-3 left-3">
