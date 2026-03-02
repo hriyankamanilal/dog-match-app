@@ -178,7 +178,7 @@ export default function Compare() {
   // Check if user has quiz answers in sessionStorage
   const quizAnswers = useMemo<QuizAnswers | null>(() => {
     try {
-      const stored = sessionStorage.getItem("dogmatch-quiz-answers");
+const stored = localStorage.getItem("dogmatch-quiz-answers");
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
