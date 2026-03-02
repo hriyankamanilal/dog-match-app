@@ -26,7 +26,7 @@ export default function Results() {
   // Save answers to sessionStorage so Compare page can use them
   useEffect(() => {
     try {
-      sessionStorage.setItem("dogmatch-quiz-answers", JSON.stringify(answers));
+localStorage.setItem("dogmatch-quiz-answers", JSON.stringify(answers));
     } catch {}
   }, [answers]);
 
