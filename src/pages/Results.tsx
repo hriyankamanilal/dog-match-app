@@ -1,5 +1,5 @@
 import { useSearchParams, Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { ArrowRight, Heart, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { calculateMatch, QuizAnswers } from "@/data/quiz-logic";
@@ -23,10 +23,16 @@ export default function Results() {
     vibe: (params.get("vibe") as QuizAnswers["vibe"]) || "balanced",
   }), [params]);
 
+  // Save answers to sessionStorage so Compare page can use them
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("dogmatch-quiz-answers", JSON.stringify(answers));
+    } catch {}
+  }, [answers]);
+
   const result = useMemo(() => calculateMatch(answers), [answers]);
   const { topMatch, runners } = result;
-
-const topImg = topMatch.imageUrl;
+  const topImg = topMatch.imageUrl;
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,23 +90,20 @@ const topImg = topMatch.imageUrl;
           {/* Runners up */}
           <h3 className="font-heading font-bold text-xl text-foreground mb-4">Runners-up</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
-            {runners.map((breed, i) => {
-
-              return (
-                <Link key={breed.name} to={getBreedUrl(breed)} className="group">
-                  <div className="card-soft rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all hover:-translate-y-1 flex gap-4 p-4 items-center">
-                    <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-muted">
+            {runners.map((breed, i) => (
+              <Link key={breed.name} to={getBreedUrl(breed)} className="group">
+                <div className="card-soft rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all hover:-translate-y-1 flex gap-4 p-4 items-center">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-muted">
                     <img src={breed.imageUrl} alt={breed.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-0.5">#{i + 2} Runner-up</div>
-                      <h4 className="font-heading font-bold text-foreground group-hover:text-primary transition-colors">{breed.name}</h4>
-                      <p className="text-muted-foreground text-xs">{breed.temperament.split(",")[0]}</p>
-                    </div>
                   </div>
-                </Link>
-              );
-            })}
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-0.5">#{i + 2} Runner-up</div>
+                    <h4 className="font-heading font-bold text-foreground group-hover:text-primary transition-colors">{breed.name}</h4>
+                    <p className="text-muted-foreground text-xs">{breed.temperament.split(",")[0]}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
 
           {/* Adoption CTA */}
