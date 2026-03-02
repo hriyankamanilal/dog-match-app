@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Breed, getBreedUrl, energyLabel, sheddingLabel } from "@/data/breeds";
-import { Zap, Scissors, Ruler, PawPrint } from "lucide-react";
+import { Zap, Scissors, Ruler, PawPrint, GitCompare } from "lucide-react";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useCompare } from "@/context/CompareContext";
 
 interface BreedCardProps {
   breed: Breed;
@@ -94,28 +95,24 @@ export default function BreedCard({ breed }: BreedCardProps) {
   const [imgSrc, setImgSrc] = useState<string>(breed.imageUrl);
   const [loading, setLoading] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToCompare, removeFromCompare, isInCompare, compareList } = useCompare();
   const favorited = isFavorite(breed.name);
+  const inCompare = isInCompare(breed.name);
+  const compareFull = compareList.length >= 2 && !inCompare;
 
   useEffect(() => {
     const dogCeoBreed = toDogCeoBreed(breed.name);
-    if (!dogCeoBreed) {
-      setLoading(false);
-      return;
-    }
+    if (!dogCeoBreed) { setLoading(false); return; }
     fetch(`https://dog.ceo/api/breed/${dogCeoBreed}/images/random`)
       .then(r => r.json())
-      .then(data => {
-        if (data.status === "success" && data.message) {
-          setImgSrc(data.message);
-        }
-      })
+      .then(data => { if (data.status === "success" && data.message) setImgSrc(data.message); })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [breed.name]);
 
   return (
     <Link to={getBreedUrl(breed)} className="group block">
-      <div className="card-soft h-full flex flex-col overflow-hidden rounded-2xl border border-border transition-all duration-300 hover:border-primary/50 hover:shadow-glow-primary hover:-translate-y-1">
+      <div className={`card-soft h-full flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 hover:shadow-glow-primary hover:-translate-y-1 ${inCompare ? "border-primary shadow-glow-primary" : "border-border hover:border-primary/50"}`}>
         <div className="relative h-48 overflow-hidden rounded-t-2xl bg-muted">
           {loading ? (
             <div className="w-full h-full flex items-center justify-center bg-muted animate-pulse">
@@ -132,25 +129,35 @@ export default function BreedCard({ breed }: BreedCardProps) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
 
-          {/* Paw favorite button — fixed color states */}
+          {/* Paw favorite button */}
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(breed.name); }}
+            className={`absolute top-3 left-3 p-2 rounded-full transition-all duration-200 ${
+              favorited ? "bg-accent text-foreground scale-110 shadow-glow-accent" : "bg-white/80 text-muted-foreground hover:bg-accent/20 hover:text-accent"
+            }`}
+            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+          >
+            <PawPrint className="w-4 h-4" fill={favorited ? "currentColor" : "none"} strokeWidth={favorited ? 0 : 2} />
+          </button>
+
+          {/* Compare button */}
           <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              toggleFavorite(breed.name);
+              inCompare ? removeFromCompare(breed.name) : addToCompare(breed);
             }}
-            className={`absolute top-3 left-3 p-2 rounded-full transition-all duration-200 ${
-              favorited
-                ? "bg-accent text-foreground scale-110 shadow-glow-accent"
-                : "bg-white/80 text-muted-foreground hover:bg-accent/20 hover:text-accent"
+            disabled={compareFull}
+            className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${
+              inCompare
+                ? "bg-primary text-primary-foreground scale-110"
+                : compareFull
+                ? "bg-white/40 text-muted-foreground/40 cursor-not-allowed"
+                : "bg-white/80 text-muted-foreground hover:bg-primary/20 hover:text-primary"
             }`}
-            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+            aria-label={inCompare ? "Remove from compare" : "Add to compare"}
           >
-            <PawPrint
-              className="w-4 h-4"
-              fill={favorited ? "currentColor" : "none"}
-              strokeWidth={favorited ? 0 : 2}
-            />
+            <GitCompare className="w-4 h-4" />
           </button>
 
           <div className="absolute bottom-3 left-3">
@@ -158,13 +165,6 @@ export default function BreedCard({ breed }: BreedCardProps) {
               {breed.sizeCategory}
             </span>
           </div>
-          {breed.isAllergyFriendly && (
-            <div className="absolute top-3 right-3">
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/90 text-accent-foreground">
-                🌿 Hypo
-              </span>
-            </div>
-          )}
         </div>
 
         <div className="p-4 flex flex-col gap-2 flex-1">
