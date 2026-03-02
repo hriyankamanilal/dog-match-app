@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { breeds, Breed } from "@/data/breeds";
+import { breeds } from "@/data/breeds";
 import BreedCard from "@/components/BreedCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -43,15 +43,7 @@ function getSheddingBucket(val: number): SheddingFilter {
   return "Low";
 }
 
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -84,7 +76,7 @@ function Toggle({ label, active, onClick }: { label: string; active: boolean; on
 export default function Breeds() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false); // collapsed by default
 
   const toggleSize = (s: SizeFilter) => {
     setFilters((f) => ({
@@ -134,27 +126,48 @@ export default function Breeds() {
     filters.goodWithKids ||
     filters.goodWithPets;
 
+  const activeFilterCount =
+    filters.size.length +
+    filters.energy.length +
+    filters.shedding.length +
+    (filters.allergyFriendly ? 1 : 0) +
+    (filters.apartmentFriendly ? 1 : 0) +
+    (filters.goodWithKids ? 1 : 0) +
+    (filters.goodWithPets ? 1 : 0);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="pt-20">
         {/* Header */}
-        <div className="border-b border-border bg-card/40 py-10">
+        <div className="border-b border-border bg-card/40 py-12">
           <div className="container mx-auto px-4">
-            <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-2">Browse</p>
+            <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-2">Explore</p>
             <h1 className="font-heading font-black text-4xl md:text-5xl text-foreground mb-3">
-              Dog Breeds
+              Browse <span className="gradient-text">Dog Breeds</span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-xl">
               {breeds.length}+ breeds with real data on energy, grooming, shedding, and temperament.
-              Breed traits are tendencies, not guarantees.
             </p>
+            {/* Stats strip */}
+            <div className="flex flex-wrap gap-6 mt-6">
+              {[
+                { label: "Breeds", value: `${breeds.length}+` },
+                { label: "Size categories", value: "4" },
+                { label: "Breed groups", value: "8" },
+              ].map(stat => (
+                <div key={stat.label} className="flex items-center gap-2">
+                  <span className="font-heading font-black text-2xl text-primary">{stat.value}</span>
+                  <span className="text-muted-foreground text-sm">{stat.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="container mx-auto px-4 py-8">
           {/* Search + filter toggle */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex gap-3 mb-4">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -167,13 +180,16 @@ export default function Breeds() {
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="rounded-xl border-border gap-2"
+              className={`rounded-xl border-border gap-2 transition-all ${showFilters ? "border-primary text-primary" : ""}`}
             >
               <SlidersHorizontal className="w-4 h-4" />
               Filters
-              {hasFilters && (
-                <span className="w-2 h-2 rounded-full bg-accent" />
+              {activeFilterCount > 0 && (
+                <span className="bg-accent text-accent-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
               )}
+              {showFilters ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </Button>
             {hasFilters && (
               <Button
@@ -187,9 +203,9 @@ export default function Breeds() {
             )}
           </div>
 
-          {/* Filters panel */}
+          {/* Filters panel — collapsible */}
           {showFilters && (
-            <div className="card-soft rounded-2xl p-5 mb-8 space-y-4">
+            <div className="card-soft rounded-2xl p-5 mb-6 space-y-4 border border-primary/20 animate-fade-up">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Size</p>
@@ -231,7 +247,8 @@ export default function Breeds() {
           {/* Results count */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-muted-foreground text-sm">
-              <span className="font-semibold text-foreground">{filteredBreeds.length}</span> breeds found
+              Showing <span className="font-semibold text-foreground">{filteredBreeds.length}</span> breeds
+              {hasFilters && <span className="text-accent font-medium"> (filtered)</span>}
             </p>
           </div>
 
