@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useQuizTaken } from "@/hooks/useQuizTaken";
 import { breeds } from "@/data/breeds";
 import BreedCard from "@/components/BreedCard";
 import Navbar from "@/components/Navbar";
@@ -9,6 +10,7 @@ import Footer from "@/components/Footer";
 
 export default function Favorites() {
   const { favorites } = useFavorites();
+  const quizTaken = useQuizTaken();
   const favoriteBreeds = breeds.filter(b => favorites.includes(b.name));
 
   return (
@@ -46,7 +48,7 @@ export default function Favorites() {
                 </Link>
                 <Link to="/quiz">
                   <Button variant="outline" className="rounded-pill border-primary/50 text-primary font-heading font-semibold gap-2">
-                    Take the Quiz
+                    {quizTaken ? "Retake Quiz" : "Take the Quiz"}
                   </Button>
                 </Link>
               </div>
